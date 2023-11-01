@@ -1,0 +1,41 @@
+diff -up ./msrest/serialization.py.orig ./msrest/serialization.py
+--- ./msrest/serialization.py.orig	2018-10-15 18:43:34.000000000 +0000
++++ ./msrest/serialization.py	2018-11-02 00:23:20.092139671 +0000
+@@ -27,6 +27,7 @@
+ from base64 import b64decode, b64encode
+ import calendar
+ import datetime
++from distutils.version import LooseVersion, StrictVersion
+ import decimal
+ from enum import Enum
+ import json
+@@ -37,6 +38,7 @@ try:
+     from urllib import quote  # type: ignore
+ except ImportError:
+     from urllib.parse import quote  # type: ignore
++import pkg_resources
+ import xml.etree.ElementTree as ET
+ 
+ import isodate
+@@ -57,6 +59,7 @@ except NameError:
+     basestring = str  # type: ignore
+ 
+ _LOGGER = logging.getLogger(__name__)
++_ISODATE_VERSION = pkg_resources.get_distribution("isodate").version
+ 
+ try:
+     _long_type = long   # type: ignore
+@@ -1712,8 +1715,11 @@ class Deserializer(object):
+             attr = attr.text
+         if re.search(r"[^\W\d_]", attr, re.I + re.U):
+             raise DeserializationError("Date must have only digits and -. Received: %s" % attr)
+-        # This must NOT use defaultmonth/defaultday. Using None ensure this raises an exception.
+-        return isodate.parse_date(attr, defaultmonth=None, defaultday=None)
++        if LooseVersion(_ISODATE_VERSION) >= LooseVersion("0.6.0"):
++            # This must NOT use defaultmonth/defaultday. Using None ensure this raises an exception.
++            return isodate.parse_date(attr, defaultmonth=None, defaultday=None)
++        else:
++            return isodate.parse_date(attr)
+ 
+     @staticmethod
+     def deserialize_rfc(attr):

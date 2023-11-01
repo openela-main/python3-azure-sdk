@@ -1,0 +1,44 @@
+diff -up ./setup.py.orig ./setup.py
+--- ./setup.py.orig	2018-10-15 20:43:34.000000000 +0200
++++ ./setup.py	2018-11-01 15:56:18.995147704 +0100
+@@ -25,6 +25,20 @@
+ # --------------------------------------------------------------------------
+ 
+ from setuptools import setup, find_packages
++import sys
++
++install_requires = [
++    "requests>=2.16,<2.17",
++    "requests_oauthlib>=0.5.0",
++    "isodate>=0.6.0",
++    "certifi>=2017.4.17"
++]
++if sys.version_info < (3, 4):
++    install_requires.append("enum34>=1.0.4")
++if sys.version_info < (3, 5):
++    install_requires.append("typing")
++else:
++    install_requires += ["aiohttp>=3.0", "aiodns"]
+ 
+ setup(
+     name='msrest',
+@@ -47,18 +61,5 @@ setup(
+         'Programming Language :: Python :: 3.7',
+         'License :: OSI Approved :: MIT License',
+         'Topic :: Software Development'],
+-    install_requires=[
+-        "requests~=2.16",
+-        "requests_oauthlib>=0.5.0",
+-        "isodate>=0.6.0",
+-        "certifi>=2017.4.17",
+-    ],
+-    extras_require={
+-        ":python_version<'3.4'": ['enum34>=1.0.4'],
+-        ":python_version<'3.5'": ['typing'],
+-        "async:python_version>='3.5'": [
+-            'aiohttp>=3.0',
+-            'aiodns'
+-        ],
+-    }
++    install_requires=install_requires
+ )
