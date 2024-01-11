@@ -1,0 +1,15 @@
+diff -r -u certifi-2018.10.15.orig/certifi/core.py certifi-2018.10.15/certifi/core.py
+--- certifi-2018.10.15.orig/certifi/core.py	2018-01-18 15:27:24.000000000 -0500
++++ certifi-2018.10.15/certifi/core.py	2018-12-13 11:08:30.834151536 -0500
+@@ -19,9 +19,7 @@
+ 
+ 
+ def where():
+-    f = os.path.dirname(__file__)
+-
+-    return os.path.join(f, 'cacert.pem')
++    return '/etc/pki/tls/certs/ca-bundle.crt'
+ 
+ 
+ def old_where():
+Only in certifi-2018.10.15/certifi: core.py~
